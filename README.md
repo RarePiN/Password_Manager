@@ -8,8 +8,9 @@ I share it mainly for self access and educational purpose. <br>
 <br>
 <h1> To-Do: </h1>
 <p>
-1: Decrypt password from file <br>
-2: Finish output password function <br>
-3: Add access with password only <br>
-4: Finish user interface <br>
+1: More complicated encrypt algorithm <br>
+2: Decrypt password from file <br>
+3: Finish output password function <br>
+4: Add access with password only <br>
+5: Finish user interface <br>
 </p>
