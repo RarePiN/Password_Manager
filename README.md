@@ -6,7 +6,7 @@ So please note that this password manager is not safe to use. <br>
 I share it mainly for self access and educational purpose. <br>
 </p>
 <br>
-# To-Do:
+<h1> To-Do: </h1>
 <p>
 1: Decrypt password from file <br>
 2: Finish output password function <br>
