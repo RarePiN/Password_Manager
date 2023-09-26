@@ -116,7 +116,7 @@ void export_password() {    // Output password to interface or file
     ifstream password ("Passwords.pass");
     int current = 1;
     getline(password, pass);
-    while (!password.eof()) {
+    while (!password.eof() and current != 6) {
         getline(password, pass);
         cout << current << ": " <<  decrypt(pass) << endl;
         current++;
@@ -133,20 +133,19 @@ void store_password(string pass, int num) {    // Put password into password fil
     ofstream password ("Passwords.pass");  //Wipe the old password file
     ifstream temp ("temp.pass");
     string line;
-    int count = 0;
-    if (password && temp) {    //Create new password file
-        while (getline(temp, line)) {
-            if (count == num) {
-                password << pass << "\n";
+    int count = 0;        //Create new password file
+    bool end = false;
+    while (getline(temp, line)) {
+        if (count == num) {
+            password << pass << "\n";
+        } else {
+            if (count == 6) {
+                password << line;
             } else {
-                if (count == 6) {
-                    password << line;
-                } else {
-                    password << line << "\n";
-                }
+                password << line << "\n";
             }
-            count++;
         }
+        count++;
     }
     password.close();
     delete_temp();
@@ -165,7 +164,7 @@ bool check_passcode(string pass) {
 
 void passfile() {
     ofstream password ("Passwords.pass");
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         password << "\n";
     }
 }
