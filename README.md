@@ -6,11 +6,8 @@ So please note that this password manager is not safe to use. <br>
 I share it mainly for self access and educational purpose. <br>
 </p>
 <br>
-<h1> To-Do: </h1>
+<h1> To-Do:  (V.2) </h1>
 <p>
 1: More complicated encrypt algorithm <br>
-2: Decrypt password from file <br>
-3: Finish output password function <br>
-4: Add access with password only <br>
-5: Finish user interface <br>
+2: Better user interface <br>
 </p>
