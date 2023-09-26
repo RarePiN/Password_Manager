@@ -14,7 +14,7 @@ int abs(int num) {    // Abslute value of a number
     }
 }
 
-string binary(int num) {    // Convery number into binary
+string binary(int num) {    // Convert number into binary
     if (num != 0) {    
         int quotient = abs(num);
         char temp;
@@ -38,7 +38,7 @@ string binary(int num) {    // Convery number into binary
     }
 }
 
-int decimal(string num) {
+int decimal(string num) {    // Convert number into decimal
     int size = num.length();
     int total = 0;
     for (int i = 0; i < size; i++) {
