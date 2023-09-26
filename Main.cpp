@@ -198,13 +198,20 @@ int main() {    // User interface
     if (action == 0) {
         string pass;
         int num = -1;
-        cout << "Input your password:" << endl;
+        cout << "Input your current password:" << endl;
         cin >> pass;
-        while (num < 1 or num > 6) {
-            cout << "Choose password number (1-5):" << endl;
-            cin >> num;
+        if (check_passcode(pass)) {
+            cout << "Input your password:" << endl;
+            cin >> pass;
+            while (num < 1 or num > 6) {
+                cout << "Choose password number (1-5):" << endl;
+                cin >> num;
+            }
+            store_password(pass, num);
+        } else {
+            cout << "Invalid password bro." << endl;
+            return 0;
         }
-        store_password(pass, num);
     } else if (action == 2) {
         cout << "Input your old password:" << endl;
         string pass;
@@ -219,12 +226,20 @@ int main() {    // User interface
         }
         
     } else {
-        int num = -1;
-        while (num < 1 or num > 6) {
-            cout << "Choose password number (1-5):" << endl;
-            cin >> num;
+        cout << "Input your current password:" << endl;
+        string pass;
+        cin >> pass;
+        if (check_passcode(pass)) {
+            int num = -1;
+            while (num < 1 or num > 6) {
+                cout << "Choose password number (1-5):" << endl;
+                cin >> num;
+            }
+            export_password(num);
+        } else {
+            cout << "Invalid password bro." << endl;
+            return 0;
         }
-        export_password(num);
     }
     return 0;
 }
