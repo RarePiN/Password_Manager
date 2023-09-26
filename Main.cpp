@@ -111,18 +111,16 @@ string decrypt(string pass) {    //Decrypt password
     return output;
 }
 
-void export_password(int num) {    // Output password to interface or file
+void export_password() {    // Output password to interface or file
     string pass;
     ifstream password ("Passwords.pass");
-    int current = 0;
+    int current = 1;
+    getline(password, pass);
     while (!password.eof()) {
         getline(password, pass);
-        if (current == num) {
-            break;
-        }
+        cout << current << ": " <<  decrypt(pass) << endl;
         current++;
     }
-    cout << decrypt(pass) << endl;
     return;
 }
 
@@ -141,7 +139,7 @@ void store_password(string pass, int num) {    // Put password into password fil
             if (count == num) {
                 password << pass << "\n";
             } else {
-                if (count == 5) {
+                if (count == 6) {
                     password << line;
                 } else {
                     password << line << "\n";
@@ -203,7 +201,7 @@ int main() {    // User interface
         if (check_passcode(pass)) {
             cout << "Input your password:" << endl;
             cin >> pass;
-            while (num < 1 or num > 6) {
+            while (num < 1 or num > 5) {
                 cout << "Choose password number (1-5):" << endl;
                 cin >> num;
             }
@@ -230,12 +228,7 @@ int main() {    // User interface
         string pass;
         cin >> pass;
         if (check_passcode(pass)) {
-            int num = -1;
-            while (num < 1 or num > 6) {
-                cout << "Choose password number (1-5):" << endl;
-                cin >> num;
-            }
-            export_password(num);
+            export_password();
         } else {
             cout << "Invalid password bro." << endl;
             return 0;
