@@ -3,9 +3,10 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
-int abs(int num) {
+int abs(int num) {    // Abslute value of a number
     if (num > 0) {
         return num * -1;
     } else {
@@ -13,7 +14,7 @@ int abs(int num) {
     }
 }
 
-string binary(int num) {
+string binary(int num) {    // Convery number into binary
     if (num != 0) {    
         int quotient = abs(num);
         char temp;
@@ -37,16 +38,15 @@ string binary(int num) {
     }
 }
 
-void initialize() {    // Create a file to store passwords.
-    ifstream password ("Passwords.pass");
-    if (password.is_open()) {
-        password.close();
+int decimal(string num) {
+    int size = num.length();
+    int total = 0;
+    for (int i = 0; i < size; i++) {
+        if (num[i] == '1') {
+            total += pow(2 , (size - i - 1));
+        }
     }
-    else {
-        ofstream password ("Passwords.pass");
-        cout << "Created password storage file." << endl;
-    }
-    return;    
+    return total;
 }
 
 void create_temp() {    // Clone the passwords to a temp file.
@@ -90,28 +90,45 @@ string decrypt(string pass) {    //Decrypt password
     for (int i = 0; i < length; i++) {
         if (index == 0) {
             index = pass[i] - '0';
-            part = part + to_string(index);
             if (part != "") {
-                output = output + part;
+                temp = decimal(part);
+                output = output + temp;
             }
             part = "";
         } else {
-            part = part + pass[i];
+            if (pass[i] == '/')
+                part = part + '1';
+            else {
+                part = part + '0';
+            }
             index--;
         }
     }
     if (part != "") {
-        output = output + part;
+        temp = decimal(part);
+        output = output + temp;
     }
     return output;
 }
 
-void export_password() {    // Output password to interface or file
+void export_password(int num) {    // Output password to interface or file
+    string pass;
+    ifstream password ("Passwords.pass");
+    int current = 0;
+    while (!password.eof()) {
+        getline(password, pass);
+        if (current == num) {
+            break;
+        }
+        current++;
+    }
+    cout << decrypt(pass) << endl;
     return;
 }
 
 void store_password(string pass, int num) {    // Put password into password file
     int size;
+    pass = encrypt(pass);
     size = pass.size();
     create_temp();
     remove("Passwords.pass");
@@ -138,11 +155,45 @@ void store_password(string pass, int num) {    // Put password into password fil
     return;
 }
 
-int UI() {    // User interface
-    delete_temp();
+bool check_passcode(string pass) {
+    ifstream password ("Passwords.pass");
+    string temp;
+    getline(password, temp);
+    if (encrypt(pass) == temp) {
+        return true;
+    }
+    return false;
+}
+
+void passfile() {
+    ofstream password ("Passwords.pass");
+    for (int i = 0; i < 5; i++) {
+        password << "\n";
+    }
+}
+
+void initialize() {    // If user is first time using
+    ifstream password ("Passwords.pass");
+    if (password.is_open()) {
+        password.close();
+    }
+    else {
+        ofstream password ("Passwords.pass");
+        password.close();
+        passfile();
+        cout << "Created password storage file." << endl;
+        cout << "Please create a password for your program." << endl;
+        string pass;
+        cin >> pass;
+        store_password(pass, 0);
+    }
+    return;    
+}
+
+int main() {    // User interface
     initialize();
     int action;
-    cout << "Action (0: Import password, 1: Export password):";
+    cout << "Action (0: Import password, 1: Export password, 2: Set password):";
     cin >> action;
     if (action == 0) {
         string pass;
@@ -154,15 +205,26 @@ int UI() {    // User interface
             cin >> num;
         }
         store_password(pass, num);
+    } else if (action == 2) {
+        cout << "Input your old password:" << endl;
+        string pass;
+        cin >> pass;
+        if (check_passcode(pass)) {
+            cout << "Input your new password:" << endl;
+            cin >> pass;
+            store_password(pass, 0);
+        } else {
+            cout << "Invalid password." << endl;
+            return 0;
+        }
+        
     } else {
-        return 0;
+        int num = -1;
+        while (num < 1 or num > 6) {
+            cout << "Choose password number (1-5):" << endl;
+            cin >> num;
+        }
+        export_password(num);
     }
     return 0;
-}
-
-int main() {    // Temporary testing
-    string pass;
-    pass = "test";
-    cout << endl << encrypt(pass) << endl << endl;
-    cout << endl << decrypt(encrypt(pass)) << endl << endl;
 }
