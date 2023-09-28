@@ -6,6 +6,8 @@
 #include <cmath>
 using namespace std;
 
+bool first_time = false;
+
 int abs(int num) {    // Abslute value of a number
     if (num > 0) {
         return num * -1;
@@ -115,10 +117,12 @@ void export_password() {    // Output password to interface or file
     string pass;
     ifstream password ("Passwords.pass");
     int current = 1;
+    cout << "█▀█ ▄▀█ █▀ █▀ █░█░█ █▀█ █▀█ █▀▄ █▀" << endl;
+    cout << "█▀▀ █▀█ ▄█ ▄█ ▀▄▀▄▀ █▄█ █▀▄ █▄▀ ▄█" << endl << endl << endl;
     getline(password, pass);
     while (!password.eof() and current != 6) {
         getline(password, pass);
-        cout << current << ": " <<  decrypt(pass) << endl;
+        cout << current << ": " <<  decrypt(pass) << endl << endl;
         current++;
     }
     return;
@@ -152,6 +156,14 @@ void store_password(string pass, int num) {    // Put password into password fil
     return;
 }
 
+void line() {       // Draw a line
+    for (int i = 0; i < 72; i++) {
+        cout << '=';
+    }
+    cout << endl;
+    return;
+}
+
 bool check_passcode(string pass) {
     ifstream password ("Passwords.pass");
     string temp;
@@ -162,10 +174,41 @@ bool check_passcode(string pass) {
     return false;
 }
 
+bool check_overwrite(int num) {
+    ifstream password ("Passwords.pass");
+    string line;
+    int current = 0;
+    getline(password, line);
+    while (!password.eof() and current != 6) {
+        getline(password, line);
+        current++;
+        if (current == num) {
+            if (line == "") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void passfile() {
     ofstream password ("Passwords.pass");
     for (int i = 0; i < 6; i++) {
         password << "\n";
+    }
+}
+
+void data_wipe() {
+    string temp;
+    ifstream password ("Passwords.pass");
+    getline(password, temp);
+    remove("Passwords.pass");
+    ofstream newpass ("Passwords.pass");
+    newpass << temp;
+    for (int i = 0; i < 6; i++) {
+        newpass << "\n";
     }
 }
 
@@ -178,59 +221,137 @@ void initialize() {    // If user is first time using
         ofstream password ("Passwords.pass");
         password.close();
         passfile();
-        cout << "Created password storage file." << endl;
-        cout << "Please create a password for your program." << endl;
+        cout << endl;
+        line();
+        cout << endl;
+        cout << "Thank you for using this program." << endl << endl;;
+        cout << "Please set a password to access your stored passwords." << endl << endl << ": ";
         string pass;
         cin >> pass;
         store_password(pass, 0);
+        first_time = true;
     }
     return;    
 }
 
+void logo() {    //Draw the logo
+    cout << "██████╗░░█████╗░░██████╗░██████╗░██╗░░░░░░░██╗░█████╗░██████╗░██████╗░" << endl;
+    cout << "██╔══██╗██╔══██╗██╔════╝██╔════╝░██║░░██╗░░██║██╔══██╗██╔══██╗██╔══██╗" << endl;
+    cout << "██████╔╝███████║╚█████╗░╚█████╗░░╚██╗████╗██╔╝██║░░██║██████╔╝██║░░██║" << endl;
+    cout << "██╔═══╝░██╔══██║░╚═══██╗░╚═══██╗░░████╔═████║░██║░░██║██╔══██╗██║░░██║" << endl;
+    cout << "██║░░░░░██║░░██║██████╔╝██████╔╝░░╚██╔╝░╚██╔╝░╚█████╔╝██║░░██║██████╔╝" << endl;
+    cout << "╚═╝░░░░░╚═╝░░╚═╝╚═════╝░╚═════╝░░░░╚═╝░░░╚═╝░░░╚════╝░╚═╝░░╚═╝╚═════╝░" << endl << endl;
+    cout << "███╗░░░███╗░█████╗░███╗░░██╗░█████╗░░██████╗░███████╗██████╗░" << endl;
+    cout << "████╗░████║██╔══██╗████╗░██║██╔══██╗██╔════╝░██╔════╝██╔══██╗" << endl;
+    cout << "██╔████╔██║███████║██╔██╗██║███████║██║░░██╗░█████╗░░██████╔╝" << endl;
+    cout << "██║╚██╔╝██║██╔══██║██║╚████║██╔══██║██║░░╚██╗██╔══╝░░██╔══██╗" << endl;
+    cout << "██║░╚═╝░██║██║░░██║██║░╚███║██║░░██║╚██████╔╝███████╗██║░░██║" << endl;
+    cout << "╚═╝░░░░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═╝░░╚═╝" << endl;
+}
+
 int main() {    // User interface
+    logo();
+    cout << endl;
     initialize();
-    int action;
-    cout << "Action (0: Import password, 1: Export password, 2: Set password):";
-    cin >> action;
-    if (action == 0) {
-        string pass;
-        int num = -1;
-        cout << "Input your current password:" << endl;
-        cin >> pass;
-        if (check_passcode(pass)) {
-            cout << "Input your password:" << endl;
-            cin >> pass;
-            while (num < 1 or num > 5) {
-                cout << "Choose password number (1-5):" << endl;
-                cin >> num;
+    cout << endl;
+    line();
+    string login = "";
+    int tries = 4;
+    if (!first_time) {    // Login
+        while (check_passcode(login) == false and tries > 0) {
+            cout << endl;
+            cout << "Please enter your access password." << endl << endl << ": ";
+            cin >> login;
+            cout << endl;
+            line();
+            if (check_passcode(login) == false) {
+                cout << endl << "Invalid acces password, you have " << tries << " try(s) left." << endl;
+                tries--;
             }
-            store_password(pass, num);
-        } else {
-            cout << "Invalid password bro." << endl;
+        }
+        if (tries == 0) {
             return 0;
         }
-    } else if (action == 2) {
-        cout << "Input your old password:" << endl;
-        string pass;
-        cin >> pass;
-        if (check_passcode(pass)) {
-            cout << "Input your new password:" << endl;
+    }
+
+    int action = 0;
+    while (action >= 0 and action < 4) {    // Main Interface
+        cout << "┏━┓┏━┓" << endl;
+        cout << "┃┃┗┛┃┃" << endl;
+        cout << "┃┏┓┏┓┣━━┳━┓┏┓┏┓" << endl;
+        cout << "┃┃┃┃┃┃┃━┫┏┓┫┃┃┃" << endl;
+        cout << "┃┃┃┃┃┃┃━┫┃┃┃┗┛┃" << endl;
+        cout << "┗┛┗┛┗┻━━┻┛┗┻━━┛" << endl << endl;
+        cout << "0: Import password." << endl;
+        cout << "1: Export password." << endl;
+        cout << "2: Reset access password." << endl;
+        cout << "3: Clear stored password." << endl;
+        cout << "4: Exit." << endl << endl << ": ";
+        cin >> action;
+        cout << endl;
+        line();
+        cout << endl;
+        if (action == 0) {
+            string pass;
+            int storage;
+            cout << "Please enter the password you want to import." << endl << endl << ": ";
             cin >> pass;
-            store_password(pass, 0);
-        } else {
-            cout << "Invalid password." << endl;
-            return 0;
-        }
-        
-    } else {
-        cout << "Input your current password:" << endl;
-        string pass;
-        cin >> pass;
-        if (check_passcode(pass)) {
+            cout << endl << "Please choose a storage space. (1-5)" << endl << endl << ": ";
+            cin >> storage;
+            if (storage > 0 and storage < 6) {
+                if (check_overwrite(storage)) {
+                    cout << endl << "Storage already contains a password." << endl << "Overwrite password? (Y/N)" << endl << endl << ": ";
+                    char temp;
+                    cin >> temp;
+                    if (temp == 'Y') {
+                        store_password(pass, storage);
+                        cout << endl << "Success." << endl << endl;
+                        line();                        
+                    } else {
+                        cout << endl;
+                        line();
+                    }
+                } else {
+                    store_password(pass, storage);
+                    cout << endl << "Success." << endl << endl;
+                    line();
+                }
+            } else {
+                cout << endl << "Invalid storage number." << endl << endl;
+                line();
+            }
+        } else if (action == 1) {
             export_password();
-        } else {
-            cout << "Invalid password bro." << endl;
-            return 0;
+            cout << endl;
+            line();
+        } else if (action == 2) {
+            cout << "Please enter a new access password." << endl << endl << ": ";
+            string new_pass, confrim;
+            cin >> new_pass;
+            cout << endl << endl << "Please enter your new password again to confrim." << endl << endl << ": ";
+            cin >> confrim;
+            if (confrim == new_pass) {
+                store_password(new_pass, 0);
+                cout << endl << "Success." << endl;
+            } else {
+                cout << endl << "New passwords do not match. Reset failed." << endl;
+            }
+            cout << endl;
+            line();
+        } else if (action == 3) {
+            cout << "Do you wish to clear all stored passwords?" << endl;
+            cout << "This action cannot be reversed." << endl << endl;
+            cout << "Please enter your curretn access password." << endl << endl << ": ";
+            string pass;
+            cin >> pass;
+            if (check_passcode(pass)) {
+                data_wipe();
+                cout << endl << "Success." << endl << endl;
+                line();             
+            } else {
+                cout << endl << "Invalid password. Action failed." << endl << endl;
+                line();
+            }
         }
     }
     return 0;
