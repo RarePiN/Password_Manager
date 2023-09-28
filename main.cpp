@@ -161,7 +161,7 @@ void store_password(string pass, int num) {    // Put password into password fil
     return;
 }
 
-void line() {       // Draw a line
+void line() {   // Draw a line
     for (int i = 0; i < 72; i++) {
         cout << '=';
     }
@@ -346,7 +346,7 @@ int main() {    // User interface
         } else if (action == 3) {
             cout << "Do you wish to clear all stored passwords?" << endl;
             cout << "This action cannot be reversed." << endl << endl;
-            cout << "Please enter your curretn access password." << endl << endl << ": ";
+            cout << "Please enter your current access password." << endl << endl << ": ";
             string pass;
             cin >> pass;
             if (check_passcode(pass)) {
