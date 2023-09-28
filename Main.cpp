@@ -27,6 +27,11 @@ string binary(int num) {    // Convert number into binary
             remainder = (quotient % 2) * - 1;
             quotient = quotient / 2;
             temp = remainder + 48;
+            if (temp == '0') {
+                temp = '<';
+            } else {
+                temp = '>';
+            }
             new_num = new_num + temp;	
         }
         reverse(new_num.begin(), new_num.end());
@@ -98,7 +103,7 @@ string decrypt(string pass) {    //Decrypt password
             }
             part = "";
         } else {
-            if (pass[i] == '/')
+            if (pass[i] == '>')
                 part = part + '1';
             else {
                 part = part + '0';
@@ -164,7 +169,7 @@ void line() {       // Draw a line
     return;
 }
 
-bool check_passcode(string pass) {
+bool check_passcode(string pass) {    // Check for access password
     ifstream password ("Passwords.pass");
     string temp;
     getline(password, temp);
@@ -174,7 +179,7 @@ bool check_passcode(string pass) {
     return false;
 }
 
-bool check_overwrite(int num) {
+bool check_overwrite(int num) {    // Check if storage is occupied
     ifstream password ("Passwords.pass");
     string line;
     int current = 0;
@@ -193,14 +198,14 @@ bool check_overwrite(int num) {
     return false;
 }
 
-void passfile() {
+void passfile() {    // Create spaces for password file
     ofstream password ("Passwords.pass");
     for (int i = 0; i < 6; i++) {
         password << "\n";
     }
 }
 
-void data_wipe() {
+void data_wipe() {    // Clear saved passwords
     string temp;
     ifstream password ("Passwords.pass");
     getline(password, temp);
