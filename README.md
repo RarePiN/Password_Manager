@@ -9,5 +9,4 @@ I share it mainly for self access and educational purpose. <br>
 <h1> To-Do:  (V.2) </h1>
 <p>
 1: More complicated encrypt algorithm <br>
-2: Better user interface <br>
 </p>
