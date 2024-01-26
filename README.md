@@ -1,12 +1,13 @@
 # Password_Manager
 <p>
-This is a project that I created for my personal usage. <br>
-I am not good at coding by any means. <br>
-So please note that this password manager is not safe to use. <br>
-I share it mainly for self access and educational purpose. <br>
+I have no idea what I am doing, <br>
+this is just a test project which <br>
+its encryption algorithm is easy to crack. <br>
+This is just for study purpose, please do not <br>
+rely your privacy on it.
 </p>
 <br>
 <h1> To-Do:  (V.2) </h1>
 <p>
-1: More complicated encrypt algorithm <br>
+1: Create a more complicated encryption algorithm <br>
 </p>
